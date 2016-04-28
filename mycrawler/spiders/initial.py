@@ -5,7 +5,7 @@ class DmozSpider(scrapy.Spider):
     name = "initial"
     allowed_domains = ["registrar.ucla.edu"]
     start_urls = ["http://www.registrar.ucla.edu/schedule/"]
-    filename = "classes.txt"
+    filename = "results/classes.txt"
 
     def parse(self, response):
         classes = response.xpath('//select[@id="ctl00_BodyContentPlaceHolder_SOCmain_lstSubjectArea"]/option').extract()

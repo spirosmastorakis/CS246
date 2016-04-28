@@ -12,15 +12,15 @@ def parseClassAttributes():
     return urls
 
 
-class getClassesPerDeptSpider(scrapy.Spider):
-    name = "getClassesPerDept"
+class getClassesOverall(scrapy.Spider):
+    name = "getClassesOverall"
     allowed_domains = ["registrar.ucla.edu"]
     start_urls = parseClassAttributes()
-    filename = "results/classesPerDept"
+    filename = "results/classesPerDept.txt"
+    f = open(filename, 'wb')
+
 
     def parse(self, response):
-        myIndex = find_nth(response.url, "=", 2)
-        thisFileName = self.filename + "-" + response.url[myIndex + 1:] + ".txt"
         resp = response.xpath('//select[@id="ctl00_BodyContentPlaceHolder_crsredir1_lstCourseNormal"]/option').extract()
         classes = []
         for myclass in enumerate(resp):
@@ -29,8 +29,6 @@ class getClassesPerDeptSpider(scrapy.Spider):
         for index, myId in enumerate(classes):
             classes[index] = myId.replace(" ", "+")
         classesString = "\n".join(classes)
-        classesString2 = classesString.strip()
-        print classesString2
-        if classesString2:
-            with open(thisFileName, 'wb') as f:
-                f.write(classesString)
+        classesString2 = classesString
+        if classesString2.strip():
+            self.f.write(classesString + "\n")
