@@ -41,7 +41,7 @@ class getClassesPerDeptSpider(scrapy.Spider):
             classes[index] = myId.replace(" ", "+")
         classesString = "\n".join(classes)
         classesString2 = classesString.strip()
-        print classesString2
+        #print classesString2
         if classesString2:
             with open(thisFileName, 'wb') as f:
                 f.write(classesString)
