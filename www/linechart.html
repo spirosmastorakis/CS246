@@ -24,7 +24,7 @@
       
     function drawChart() {
       var jsonData = $.ajax({
-          url: "linechart.php?yaxis_attr=enrollment,yaxis_aggr=sum,xaxis_attr=year,data_group=ALL",
+          url: "linechart.php?yaxis_attr=enrollment&yaxis_aggr=sum&xaxis_attr=year&data_group=ALL",
           dataType: "json",
           async: false
           }).responseText;

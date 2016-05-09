@@ -20,14 +20,14 @@ $labelmapping = array(
 	'enrollment' 		=> 'Enrollment Count',
 	'enrollmentcap'		=> 'Enrollment Capacity',
 	'waitlist' 			=> 'Waitlist Count',
-	'waitlistcap'		=> 'Waitlist Capacity'
+	'waitlistcap'		=> 'Waitlist Capacity',
 	'status'			=> 'Status');
 
 $typemapping = array(
-	'VARCHAR' 			=> 'string',
-	'INT'				=> 'number', 
-	'time'				=> 'time'
-	);
+	'253' 				=> 'string',
+	'246'				=> 'number',
+	'3'					=> 'number', 
+	'11'				=> 'time');
 
 function databaseConnect(){
 	$desired_db = "TEST";
@@ -66,9 +66,9 @@ function printCols($result){
 	echo "{\"cols\": [";
 	
 	// print xaxis column
-	$id = $_GET['xaxis'];
-	$label = labelmapping[$id];
-	$type = typemapping(mysqli_fetch_field_direct($result, 0));
+	$id = $_GET['xaxis_attr'];
+	$label = $labelmapping[$id];
+	$type = $typemapping[mysqli_fetch_field_direct($result, 0)->type];
 
 	$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>$type);
 	echo json_encode($arr).",";
@@ -77,7 +77,7 @@ function printCols($result){
 	// print yaxis column
 	// $data = json_decode(stripslashes($_GET['data']));
 	if($_GET['data_group'] == 'ALL'){
-		$type = typemapping(mysqli_fetch_field_direct($result, 1));
+		$type = $typemapping[mysqli_fetch_field_direct($result, 1)->type];
 		$arr = array('id'=>'all','label'=>'All','pattern'=>'','type'=>$type);
 		echo json_encode($arr);
 	}
@@ -92,10 +92,11 @@ function printCols($result){
     echo "],";
 }
 
-function printRows($result){
+function printRows($row){
+	global $result;
+
 	echo "{\"c\":[";
-    $row = mysqli_fetch_row($result);
-    $count = mysql_num_fields($result);
+    $count = mysqli_num_fields($result);
     for($i = 0; $i<$count; $i++){
 		echo "{\"v\":\"".$row[$i]."\",\"f\":null}";
 		if($i != $count-1){
@@ -135,9 +136,16 @@ $db_connection = databaseConnect();
 // xaxis_attr = year
 // data_group = ALL
 
-$query_str = "SELECT $xaxis_attr, $yaxis_aggr\($yaxis_attr\)
+$yaxis_attr = $_GET['yaxis_attr'];
+$yaxis_aggr = $_GET['yaxis_aggr'];
+$xaxis_attr = $_GET['xaxis_attr'];
+$data_group = $_GET['data_group'];
+
+$query_str = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
 			  FROM Class
 			  GROUP BY $xaxis_attr";
+
+error_log($query_str);
 
 $result = mysqli_query($db_connection, $query_str);
 
@@ -151,10 +159,11 @@ if (mysqli_num_rows($result) > 0){
 
 	// Print Rows
     echo  "\"rows\": [";
-    printRows($result);
+    $row = mysqli_fetch_row($result);
+    printRows($row);
 	while($row = mysqli_fetch_row($result)){
 		echo ",";
-		printRows($result);
+		printRows($row);
 	}
 	echo "]}";
 	mysqli_free_result($result);
