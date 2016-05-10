@@ -1,0 +1,18 @@
+Instructions for setting up LAMP
+
+	http://markcoppock.com/notes/installing-lamp-stack-virtualbox/
+
+Instructions for testing
+
+	1. place the test html and php files (e.g. linechart.html, linechart.php) in the directory in the VM served by Apache Web Server
+		e.g. /media/sf_sharedfolder or /var/www (default)
+	
+	2. update the mysql login credential in "databaseConnect" function found in test php file to your MySQL login credential. (e.g. linechart.php). 
+		i.e. $db_connection = mysqli_connect("localhost", "lui", "", $desired_db);
+
+	3. change the $desired_db = "TEST" to the name of the database you created in MySQL. Make sure the Class table is loaded into the aforementioned database. 
+	
+	4. Make sure MySQL and Apache Web Server is running in the VM via "top" command
+	
+	5. access the test html in the host OS browser (e.g. Chrome) via forwarded port for the Apache Web Server. 
+		e.g. In my case, enter "http://sandbox.dev:8080/CS246/www/linechart.html" in the browser. in this case, "sandbox.dev:8080" is an alias for "localhost:forwarded HTTP port". What followed is the directory from the root of the directory served by Apache Web Server.
