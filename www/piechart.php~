@@ -13,8 +13,8 @@ function rowsinfo($result){
     $i=0;
     while($row = $result->fetch_assoc()) {
         echo "{\"c\":[";
-        echo "{\"v\":\"".$row["dept"]."\",\"f\":null},";
-        echo "{\"v\":".$row["total enrollment"].",\"f\":null}";
+        echo "{\"v\":\"".$row["year"]."\",\"f\":null},";
+        echo "{\"v\":".$row['total enrollment'].",\"f\":null}";
         echo "]}";
         $i = $i + 1;
         if($i!=$result->num_rows)
