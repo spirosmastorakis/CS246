@@ -8,7 +8,7 @@ CREATE TABLE Class(
 	quarter			VARCHAR(10) NOT NULL,	
 	year			VARCHAR(5) 	NOT NULL,
 	-- attributes common between lecture and associated discussion -- 
-	dept			VARCHAR(20),			-- e.g. "Computer Science", "Anthropology"
+	dept			VARCHAR(50),			-- e.g. "Computer Science", "Anthropology"
 	cnum 			VARCHAR(20),			-- Course number e.g. 31A in "CS31A"
 	title			VARCHAR(50),			-- Course title. some of the classes have more than 1 lectures and each with a different title. We should capture them as two different classes. "CUR TOP-DATA STRCTR: Cloud computing" and "CUR TOP-DATA STRCTR: Basic Data Science"
 	-- attributes specific to lectures -- 

@@ -24,7 +24,7 @@
       
     function drawChart() {
       var jsonData = $.ajax({
-          url: "linechart.php?yaxis_attr=enrollment&yaxis_aggr=sum&xaxis_attr=year&data_group=ALL",
+          url: "linechart.php?yaxis_attr=enrollment&yaxis_aggr=sum&xaxis_attr=year&data_group=NOTALL",
           dataType: "json",
           async: false
           }).responseText;
@@ -39,7 +39,7 @@
 
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, {width: 400, height: 240});
+      chart.draw(data, {width: 800, height: 480});
     }
 
     </script>
