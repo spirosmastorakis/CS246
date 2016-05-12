@@ -24,8 +24,8 @@
 
     function loadChart() {
       // Set a callback to run when the Google Visualization API is loaded.
-      return google.charts.setOnLoadCallback(drawChart);
-      drawChart();
+      google.charts.setOnLoadCallback(drawChart);
+      return false;
     };
 
     function drawChart() {
@@ -56,7 +56,7 @@
 
     </script>
 
-    <form onsubmit="return loadChart();">
+    <form onclick="return loadChart()">
       <select id="1" name="Select Y-Axis Attributes">
         <option value="Enrollment">Enrollment</option>
         <option value="Test1">Test1</option>

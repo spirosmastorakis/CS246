@@ -40,10 +40,10 @@ $typemapping = array(
 	'11'				=> 'time');
 
 function databaseConnect(){
-	$desired_db = "TEST";
+	$desired_db = "CS246";
 
 	// Connect to mysql and check for errors
-	$db_connection = mysqli_connect("localhost", "lui", "", $desired_db);
+	$db_connection = mysqli_connect("localhost", "root", "123456", $desired_db);
 	if (!$db_connection) {
 	    echo "Error: Unable to connect to MySQL." . PHP_EOL;
 	    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
