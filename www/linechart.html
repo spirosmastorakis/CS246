@@ -2,7 +2,7 @@
   <head>
     <!--CSS Style-->
     <style type="text/css">
-      code { 
+      code {
           display: block;
           background: hsl(220, 80%, 90%);}
       pre {
@@ -15,14 +15,24 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
-    
+
     // Load the Visualization API and the piechart package.
     google.charts.load('current', {'packages':['corechart']});
-      
-    // Set a callback to run when the Google Visualization API is loaded.
-    google.charts.setOnLoadCallback(drawChart);
-      
+
+    // // Set a callback to run when the Google Visualization API is loaded.
+    // google.charts.setOnLoadCallback();
+
+    function loadChart() {
+      // Set a callback to run when the Google Visualization API is loaded.
+      return google.charts.setOnLoadCallback(drawChart);
+      drawChart();
+    };
+
     function drawChart() {
+      var y_axis = document.getElementById("1").value
+      var x_axis = document.getElementById("2").value
+      var aggregate = document.getElementById("3").value
+      var data = document.getElementById("4").value
       var jsonData = $.ajax({
           url: "linechart.php?yaxis_attr=enrollment&yaxis_aggr=sum&xaxis_attr=year&data_group=NOTALL",
           dataType: "json",
@@ -33,16 +43,51 @@
       var jsonObj = JSON.parse(jsonData);
       var jsonStr = JSON.stringify(jsonObj, null, 2);
       document.getElementById("code").innerHTML = jsonStr;
-      
+
       // Create our data table out of JSON data loaded from server.
       var data = new google.visualization.DataTable(jsonData);
 
       // Instantiate and draw our chart, passing in some options.
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
       chart.draw(data, {width: 800, height: 480});
-    }
+    };
+
+    //google.charts.setOnLoadCallback(drawChart);
 
     </script>
+
+    <form onsubmit="return loadChart();">
+      <select id="1" name="Select Y-Axis Attributes">
+        <option value="Enrollment">Enrollment</option>
+        <option value="Test1">Test1</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <select id="2" name="Select X-Axis Attributes">
+        <option value="Year">Year</option>
+        <option value="Test1">Test1</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <select id="3" name="Select Y-Axis Aggregate">
+        <option value="Sum">Sum</option>
+        <option value="Test1">Test1</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <select id="4" name="Select Data Group">
+        <option value="All">All</option>
+        <option value="Not All">Not All</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <input type="submit">
+    </form>
+
   </head>
 
   <body>
@@ -51,4 +96,5 @@
     <div id="div"></div>
     <pre><code id="code"></code></pre>
   </body>
+
 </html>
