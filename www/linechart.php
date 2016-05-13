@@ -40,10 +40,10 @@ $typemapping = array(
 	'11'				=> 'time');
 
 function databaseConnect(){
-	$desired_db = "CS246";
+	$desired_db = "TEST";
 
 	// Connect to mysql and check for errors
-	$db_connection = mysqli_connect("localhost", "root", "123456", $desired_db);
+	$db_connection = mysqli_connect("localhost", "lui", "", $desired_db);
 	if (!$db_connection) {
 	    echo "Error: Unable to connect to MySQL." . PHP_EOL;
 	    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
@@ -128,7 +128,7 @@ function printCols(){
 			$id = $data_trend[$i]->trend_attr . "_" . $i;
 			$label = $data_trend[$i]->trend_name;
 			$type = $typemapping[mysqli_fetch_field_direct($element, 1)->type];
-			$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>$type);
+			$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>'number');
 			$listo[] = $arr;
 			// echo json_encode($arr);
 			// error_log(json_encode($arr));
@@ -290,7 +290,8 @@ $data_trend2 = "dept = 'Electrical Engineering'";
 // $data_trend = array("dept = 'Computer Science'", "dept = 'Electrical Engineering'");
 // $data_trend = array({"trend_attr":"dept","trend_name":"Computer Science"}, {"trend_attr":"dept","trend_name":"Computer Science"}, {"trend_attr":"dept","trend_name":"Mechanical Engineering"});
 $string = "[{\"trend_attr\":\"dept\",\"trend_name\":\"Computer Science\"}, {\"trend_attr\":\"dept\",\"trend_name\":\"Electrical Engineering\"}, {\"trend_attr\":\"dept\",\"trend_name\":\"Environment\"}]";
-$data_trend = json_decode($string);
+// $data_trend = json_decode($string);
+$data_trend = json_decode($data_group);
 
 
 $result;
@@ -333,30 +334,29 @@ if($data_group == 'ALL'){
 
 	$query_arr = array();
 	foreach ($data_trend as $element) {
-		$query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
-					  FROM Class
-					  WHERE $element->trend_attr = '$element->trend_name'
-					  GROUP BY $xaxis_attr";
+
+		if($element->trend_attr == 'all'){
+			$query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
+						  FROM Class
+						  GROUP BY $xaxis_attr";
+		} else {
+			$query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
+						  FROM Class
+						  WHERE $element->trend_attr = '$element->trend_name'
+						  GROUP BY $xaxis_attr";
+		}
+
 	}
 
-	// $query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
-	// 			  FROM Class
-	// 			  WHERE $data_trend2
-	// 			  GROUP BY $xaxis_attr";
-
-	// error_log(implode(';', $query_arr));
-
+	// Query the xaxis values and store the result variable
 	$result_xaxis = mysqli_query($db_connection, $query_str);
 
+	// Query the data values and store the result variable
 	$result_arr = array();
 	foreach ($query_arr as $element){
 		error_log($element);
 		$result_arr[] = mysqli_query($db_connection, $element);
 	}
-
-	// foreach ($result_arr as $element){
-	// 	error_log($element->num_rows);
-	// }
 
 	if (mysqli_num_rows($result_xaxis) > 0){
 		echo "{";
@@ -378,26 +378,5 @@ if($data_group == 'ALL'){
 
 
 databaseClose($db_connection);
-
-// dataTable JSON format 
-/*
-{
-  "cols": [
-        {"id":"","label":"Topping","pattern":"","type":"string"},
-        {"id":"","label":"Slices","pattern":"","type":"number"}
-      ],
-  "rows": [
-        {"c":[{"v":"Mushrooms","f":null},{"v":3,"f":null}]},
-        {"c":[{"v":"Onions","f":null},{"v":1,"f":null}]},
-        {"c":[{"v":"Olives","f":null},{"v":1,"f":null}]},
-        {"c":[{"v":"Zucchini","f":null},{"v":1,"f":null}]},
-        {"c":[{"v":"Pepperoni","f":null},{"v":2,"f":null}]}
-      ]
-  
-}
-*/
-
-
-
 
 ?>

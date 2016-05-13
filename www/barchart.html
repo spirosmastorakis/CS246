@@ -23,33 +23,11 @@
     google.charts.setOnLoadCallback(drawChart);
       
     function drawChart() {
-
-      // {"trend_attr":"dept","trend_name":"Computer Science"}
-
-      var data_group = [
-        //{trend_attr:"dept",trend_name:"Computer Science"}, 
-        //{trend_attr:"dept",trend_name:"Electrical Engineering"}, 
-        // {trend_attr:"dept",trend_name:"Environment"},
-        {trend_attr:"all",trend_name:"all"}];
-
       var jsonData = $.ajax({
-          // url: "linechart.php?yaxis_attr=enrollment&yaxis_aggr=sum&xaxis_attr=year&data_group=ALL",
-          url: "linechart.php",
-          data:{
-            "yaxis_attr":"enrollment",
-            "yaxis_aggr":"sum",
-            "xaxis_attr":"year",
-            "data_group": JSON.stringify(data_group)
-          },
+          url: "linechart.php?yaxis_attr=enrollment&yaxis_aggr=sum&xaxis_attr=year&data_group=ALLd",
           dataType: "json",
-          type: "GET",
           async: false
           }).responseText;
-
-      var options = {
-        title: 'Enrollment by Year',
-        sliceVisibilityThreshold: .01,
-      };
 
       // Print JSON object to HTML
       var jsonObj = JSON.parse(jsonData);
@@ -57,12 +35,11 @@
       document.getElementById("code").innerHTML = jsonStr;
       
       // Create our data table out of JSON data loaded from server.
-      
       var data = new google.visualization.DataTable(jsonData);
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, {width: 1200, height: 600});
+      var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+      chart.draw(data, {width: 800, height: 480});
     }
 
     </script>

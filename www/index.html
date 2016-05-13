@@ -1,0 +1,113 @@
+<html>
+  <head>
+    <!--CSS Style-->
+    <style type="text/css">
+      code {
+          display: block;
+          background: hsl(220, 80%, 90%);}
+      pre {
+          white-space: pre-wrap;
+          background: hsl(30,80%,90%);
+      }
+    </style>
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+
+    // Load the Visualization API and the piechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // // Set a callback to run when the Google Visualization API is loaded.
+    // google.charts.setOnLoadCallback();
+
+    function loadChart() {
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+      return false;
+    };
+
+    function drawChart() {
+      var y_axis = document.getElementById("1").value
+      var x_axis = document.getElementById("2").value
+      var aggregate = document.getElementById("3").value
+      var data = document.getElementById("4").value
+
+    var data_group = [
+        //{trend_attr:"dept",trend_name:"Computer Science"}, 
+        //{trend_attr:"dept",trend_name:"Electrical Engineering"}, 
+        // {trend_attr:"dept",trend_name:"Environment"},
+        {trend_attr:"all",trend_name:"all"}];
+
+      var jsonData = $.ajax({
+          url: "linechart.php",
+          dataType: "json",
+          data:{
+            "yaxis_attr": y_axis,
+            "yaxis_aggr": aggregate,
+            "xaxis_attr": x_axis,
+            "data_group": JSON.stringify(data_group)
+          },
+          async: false
+          }).responseText;
+
+      // Print JSON object to HTML
+      var jsonObj = JSON.parse(jsonData);
+      var jsonStr = JSON.stringify(jsonObj, null, 2);
+      document.getElementById("code").innerHTML = jsonStr;
+
+      // Create our data table out of JSON data loaded from server.
+      var data = new google.visualization.DataTable(jsonData);
+
+      // Instantiate and draw our chart, passing in some options.
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, {width: 800, height: 480});
+    };
+
+    //google.charts.setOnLoadCallback(drawChart);
+
+    </script>
+
+    <form onclick="return loadChart()">
+      <select id="1" name="Select Y-Axis Attributes">
+        <option value="Enrollment">Enrollment</option>
+        <option value="Test1">Test1</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <select id="2" name="Select X-Axis Attributes">
+        <option value="Year">Year</option>
+        <option value="Test1">Test1</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <select id="3" name="Select Y-Axis Aggregate">
+        <option value="Sum">Sum</option>
+        <option value="Test1">Test1</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <select id="4" name="Select Data Group">
+        <option value="All">all</option>
+        <option value="Not All">Not All</option>
+        <option value="Test2">Test2</option>
+        <option value="Test3">Test3</option>
+      </select>
+      <br><br>
+      <input type="submit">
+    </form>
+
+  </head>
+
+  <body>
+    <!--Div that will hold the pie chart-->
+    <div id="chart_div"></div>
+    <div id="div"></div>
+    <pre><code id="code"></code></pre>
+  </body>
+
+</html>
