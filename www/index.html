@@ -33,12 +33,14 @@
       var x_axis = document.getElementById("2").value
       var aggregate = document.getElementById("3").value
       var data = document.getElementById("4").value
+      var chart = document.getElementById("5").value
 
     var data_group = [
-        //{trend_attr:"dept",trend_name:"Computer Science"}, 
-        //{trend_attr:"dept",trend_name:"Electrical Engineering"}, 
-        // {trend_attr:"dept",trend_name:"Environment"},
-        {trend_attr:"all",trend_name:"all"}];
+        {trend_attr:"dept",trend_name:"Computer Science"}, 
+        {trend_attr:"dept",trend_name:"Electrical Engineering"}, 
+        {trend_attr:"dept",trend_name:"Environment"},
+        {trend_attr:"all",trend_name:"all"}
+        ];
 
       var jsonData = $.ajax({
           url: "linechart.php",
@@ -69,35 +71,44 @@
 
     </script>
 
-    <form onclick="return loadChart()">
+    <form onsubmit="return loadChart()">
+      <select id="5" name="Select Chart Type">
+        <option value="Enrollment">Line Chart</option>
+        <option value="Test1">Bar Chart</option>
+        <option value="Test2">Column Chart</option>
+        <option value="Test3">Area Chart</option>
+        <option value="Test3">Histogram</option>
+        <option value="Test3">Scatter Chart</option>
+      </select>
       <select id="1" name="Select Y-Axis Attributes">
-        <option value="Enrollment">Enrollment</option>
+        <option value="enrollment">Enrollment</option>
         <option value="Test1">Test1</option>
         <option value="Test2">Test2</option>
         <option value="Test3">Test3</option>
       </select>
-      <br><br>
+      <!-- <br><br> -->
       <select id="2" name="Select X-Axis Attributes">
-        <option value="Year">Year</option>
+        <option value="year">Year</option>
         <option value="Test1">Test1</option>
         <option value="Test2">Test2</option>
         <option value="Test3">Test3</option>
       </select>
-      <br><br>
+      <!-- <br><br> -->
       <select id="3" name="Select Y-Axis Aggregate">
-        <option value="Sum">Sum</option>
-        <option value="Test1">Test1</option>
-        <option value="Test2">Test2</option>
-        <option value="Test3">Test3</option>
+        <option value="sum">Sum</option>
+        <option value="avg">Average</option>
+        <option value="count">Count</option>
+        <option value="max">Maximum</option>
+        <option value="min">Minimum</option>
       </select>
-      <br><br>
+      <!-- <br><br> -->
       <select id="4" name="Select Data Group">
-        <option value="All">all</option>
-        <option value="Not All">Not All</option>
+        <option value="all">All</option>
+        <option value="Not All">Test 1</option>
         <option value="Test2">Test2</option>
         <option value="Test3">Test3</option>
       </select>
-      <br><br>
+      <!-- <br><br> -->
       <input type="submit">
     </form>
 

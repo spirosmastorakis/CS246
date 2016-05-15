@@ -20,7 +20,7 @@ CREATE TABLE Class(
 	stop			time,					-- End time
 	building		VARCHAR(20),
 	room			VARCHAR(20),
-	res 			VARCHAR(5),
+	-- res 			VARCHAR(5),
 	enrollment 		INT,
 	enrollmentcap	INT,
 	waitlist 		INT,
