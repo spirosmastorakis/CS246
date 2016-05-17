@@ -75,7 +75,7 @@ function printCols(){
 	$type = $typemapping[mysqli_fetch_field_direct($result_xaxis, 0)->type];
 
 	$listo = array();
-	$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>$type);
+	$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>'string');
 	$listo[] = $arr;
 
 	for ($i = 0; $i < count($result_arr); $i++) {
