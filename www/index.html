@@ -28,19 +28,74 @@
       return false;
     };
 
-    function drawChart() {
-      var y_axis = document.getElementById("1").value
-      var x_axis = document.getElementById("2").value
-      var aggregate = document.getElementById("3").value
-      var data = document.getElementById("4").value
-      var chart = document.getElementById("5").value
+    function addSelect(currentid, currentvalue) {
+      var id = Number(currentid);
+      var furtheroptions = document.getElementById(String(id + 1));
+      if(currentvalue !== "all") {
+        if(furtheroptions)
+          furtheroptions.remove();
+        var submitform = document.getElementById("submitform");
+        var jsonData = $.ajax({
+          url: "getattributevalue.php",
+          dataType: "json",
+          data:{
+            "column":currentvalue
+          },
+          async: false
+          }).responseText;
 
-    var data_group = [
-        {trend_attr:"dept",trend_name:"Computer Science"}, 
-        {trend_attr:"dept",trend_name:"Electrical Engineering"}, 
-        {trend_attr:"dept",trend_name:"Environment"},
-        {trend_attr:"all",trend_name:"all"}
-        ];
+        //Create array of options to be added
+        //var array = ["Volvo","Saab","Mercades","Audi"];
+        var array = eval(jsonData);
+
+        //Create and append select list
+        var selectList = document.createElement("select");
+        selectList.id = String(id+1);
+        submitform.appendChild(selectList);
+
+        //Create and append the options
+        for (var i = 0; i < array.length; i++) {
+          var option = document.createElement("option");
+          option.value = array[i];
+          option.text = array[i];
+          selectList.appendChild(option);
+        }
+      }
+      else {
+        if(furtheroptions)
+          furtheroptions.remove();
+      }
+    }
+
+    function drawChart() {
+      var charttype = document.getElementById("0").value;
+      var y_axis = document.getElementById("1").value;
+      var x_axis = document.getElementById("2").value;
+      var aggregate = document.getElementById("3").value;
+      //var data = document.getElementById("4").value;
+
+      var data_group = [
+//        {"trend_attr":"dept","trend_name":"Computer Science"}, 
+//        {"trend_attr":"dept","trend_name":"Electrical Engineering"}, 
+//        {"trend_attr":"dept","trend_name":"Environment"}
+//        {trend_attr:"all",trend_name:"all"}
+      ];
+      for(var id = 4; document.getElementById(String(id));) {
+        var element = {};
+        element["trend_attr"] = document.getElementById(String(id)).value;
+        id = id + 1;
+        if(element["trend_attr"] === "all") 
+	  element["trend_name"] = "all";
+        else  {
+          element["trend_name"] = document.getElementById(String(id)).value;
+          id = id + 1;
+        }
+//        data_group.push({"trend_attr":document.getElementById(String(id)).value,"trend_name":document.getElementById(String(id+1)).value});
+//      id = id + 2;
+        data_group.push(element);
+      }
+      //alert(document.getElementById("5").value)
+      
 
       var jsonData = $.ajax({
           url: "linechart.php",
@@ -63,35 +118,64 @@
       var data = new google.visualization.DataTable(jsonData);
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, {width: 800, height: 480});
+      if(charttype === "line") {
+          var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+          chart.draw(data, {width: 800, height: 480});
+      }
+      else if(charttype === "bar") {
+          var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+          chart.draw(data, {width: 800, height: 480});
+      }
+      else if(charttype === "column") {
+          var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+          chart.draw(data, {width: 800, height: 480});
+      }
+      else if(charttype === "area") {
+          var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+          chart.draw(data, {width: 800, height: 480});
+      }
+      else if(charttype === "histogram") {
+          var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+          chart.draw(data, {width: 800, height: 480});
+      }
+      else if(charttype === "scatter") {
+          var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+          chart.draw(data, {width: 800, height: 480});
+      }
     };
 
     //google.charts.setOnLoadCallback(drawChart);
 
     </script>
 
-    <form onsubmit="return loadChart()">
-      <select id="5" name="Select Chart Type">
-        <option value="Enrollment">Line Chart</option>
-        <option value="Test1">Bar Chart</option>
-        <option value="Test2">Column Chart</option>
-        <option value="Test3">Area Chart</option>
-        <option value="Test3">Histogram</option>
-        <option value="Test3">Scatter Chart</option>
+    
+
+  </head>
+
+  <body>
+    <form id="submitform" onsubmit="return loadChart()">
+      <input type="submit">
+      <br/>
+      <select id="0" name="Select Chart Type">
+        <option value="line">Line Chart</option>
+        <option value="bar">Bar Chart</option>
+        <option value="column">Column Chart</option>
+        <option value="area">Area Chart</option>
+        <option value="histogram">Histogram</option>
+        <option value="scatter">Scatter Chart</option>
       </select>
       <select id="1" name="Select Y-Axis Attributes">
         <option value="enrollment">Enrollment</option>
-        <option value="Test1">Test1</option>
-        <option value="Test2">Test2</option>
-        <option value="Test3">Test3</option>
+        <option value="enrollmentcap">Enrollment Capacity</option>
+        <option value="waitlist">Waitlist</option>
+        <option value="waitlistcap">Waitlist Capacity</option>
       </select>
       <!-- <br><br> -->
       <select id="2" name="Select X-Axis Attributes">
         <option value="year">Year</option>
-        <option value="Test1">Test1</option>
-        <option value="Test2">Test2</option>
-        <option value="Test3">Test3</option>
+        <option value="quarter">Quarter</option>
+        <option value="dept">Department</option>
+        <option value="title">Title</option>
       </select>
       <!-- <br><br> -->
       <select id="3" name="Select Y-Axis Aggregate">
@@ -102,19 +186,15 @@
         <option value="min">Minimum</option>
       </select>
       <!-- <br><br> -->
-      <select id="4" name="Select Data Group">
+      <select id="4" name="Select Data Group" onchange="addSelect(this.id, this.value)">
         <option value="all">All</option>
-        <option value="Not All">Test 1</option>
-        <option value="Test2">Test2</option>
-        <option value="Test3">Test3</option>
+        <option value="dept">Department</option>
+        <option value="year">Year</option>
+        <option value="quarter">Quarter</option>
       </select>
       <!-- <br><br> -->
-      <input type="submit">
+      
     </form>
-
-  </head>
-
-  <body>
     <!--Div that will hold the pie chart-->
     <div id="chart_div"></div>
     <div id="div"></div>
