@@ -16,6 +16,9 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
 
+    var next_group_id = 4;
+    var group_value_array = ["all", "dept", "year", "quarter"];
+    var group_text_array = ["all", "Department", "Year", "Quarter"];
     // Load the Visualization API and the piechart package.
     google.charts.load('current', {'packages':['corechart']});
 
@@ -27,6 +30,25 @@
       google.charts.setOnLoadCallback(drawChart);
       return false;
     };
+    
+    function addGroup() {
+      var submitform = document.getElementById("submitform");
+      var selectList = document.createElement("select");
+      next_group_id += 2;
+      selectList.id = String(next_group_id);
+      submitform.appendChild(selectList);
+      //selectList.onchange = addSelect(next_group_id, selectList.value);
+      for (var i = 0; i < group_value_array.length; i++) {
+        var option = document.createElement("option");
+        option.value = group_value_array[i];
+        option.text = group_text_array[i];
+        selectList.appendChild(option);
+      }
+      var newline = document.createElement("br");
+      submitform.appendChild(newline);
+      //selectList.onchange = alert("test");
+      selectList.setAttribute("onchange","addSelect(this.id, this.value)");
+    }
 
     function addSelect(currentid, currentvalue) {
       var id = Number(currentid);
@@ -51,8 +73,9 @@
         //Create and append select list
         var selectList = document.createElement("select");
         selectList.id = String(id+1);
-        submitform.appendChild(selectList);
-
+        //submitform.appendChild(selectList);
+        //submitform.children[id + 3].insertAdjacentElement("afterEnd", selectList);
+        submitform.insertBefore(selectList, document.getElementById(String(id)).nextSibling);
         //Create and append the options
         for (var i = 0; i < array.length; i++) {
           var option = document.createElement("option");
@@ -88,8 +111,8 @@
 	  element["trend_name"] = "all";
         else  {
           element["trend_name"] = document.getElementById(String(id)).value;
-          id = id + 1;
         }
+        id = id + 1;
 //        data_group.push({"trend_attr":document.getElementById(String(id)).value,"trend_name":document.getElementById(String(id+1)).value});
 //      id = id + 2;
         data_group.push(element);
@@ -185,16 +208,18 @@
         <option value="max">Maximum</option>
         <option value="min">Minimum</option>
       </select>
-      <!-- <br><br> -->
+      <br/>
       <select id="4" name="Select Data Group" onchange="addSelect(this.id, this.value)">
         <option value="all">All</option>
         <option value="dept">Department</option>
         <option value="year">Year</option>
         <option value="quarter">Quarter</option>
       </select>
-      <!-- <br><br> -->
+      <br/>
       
     </form>
+    
+    <button type="button", onclick="addGroup()">add a new group dimension</button>
     <!--Div that will hold the pie chart-->
     <div id="chart_div"></div>
     <div id="div"></div>
