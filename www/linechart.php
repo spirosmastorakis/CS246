@@ -72,7 +72,7 @@ function printCols(){
 	// print xaxis column
 	$id = $_GET['xaxis_attr'];
 	$label = $labelmapping[$id];
-	$type = $typemapping[mysqli_fetch_field_direct($result_xaxis, 0)->type];
+	// $type = $typemapping[mysqli_fetch_field_direct($result_xaxis, 0)->type];
 
 	$listo = array();
 	$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>'string');
@@ -115,13 +115,13 @@ function printRows(){
 				if ($x[0] == $row[0]){			// if the xaxis match
 					$list[] = array('v'=>$row[1], 'f'=>null);
 				} else {						// if the xaxis dont match
-					$last[$i] = $row[1];
+					$last[$i] = array($row[0], $row[1]);
 					$list[] = array('v'=>0, 'f'=>null);
 				}
 			} else {		// if there was an unused previously fetched value
 				
-				if ($x[0] == $last[$i]){			// if the xaxis match
-					$list[] = array('v'=>$last[$i], 'f'=>null);
+				if ($x[0] == $last[$i][0]){			// if the xaxis match
+					$list[] = array('v'=>$last[$i][1], 'f'=>null);
 					$last[$i] = 0;
 				} else {						// if the xaxis dont match
 					$list[] = array('v'=>0, 'f'=>null);
@@ -179,9 +179,12 @@ $result;
 $result_arr;
 $result_xaxis;
 
+$xaxis_format = ($xaxis_attr == 'start' || $xaxis_attr == 'stop')? "DATE_FORMAT($xaxis_attr, '%H:%i')":$xaxis_attr;
+
 $query_str = "SELECT $xaxis_attr
 			  FROM Class
-			  GROUP BY $xaxis_attr";
+			  GROUP BY $xaxis_attr
+			  ORDER BY $xaxis_attr";
 
 $query_arr = array();
 foreach ($data_trend as $element) {
@@ -189,12 +192,14 @@ foreach ($data_trend as $element) {
 	if($element->trend_attr == 'all'){
 		$query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
 					  FROM Class
-					  GROUP BY $xaxis_attr";
+					  GROUP BY $xaxis_attr
+					  ORDER BY $xaxis_attr";
 	} else {
 		$query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
 					  FROM Class
 					  WHERE $element->trend_attr = '$element->trend_name'
-					  GROUP BY $xaxis_attr";
+					  GROUP BY $xaxis_attr
+					  ORDER BY $xaxis_attr";
 	}
 
 }
