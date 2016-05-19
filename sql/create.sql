@@ -16,7 +16,7 @@ CREATE TABLE Class(
 	type			VARCHAR(3),				-- From the first level, usually in bold. LEC, TUT, etc.
 	-- sec				VARCHAR(5),				-- Lecture section number
 	days			VARCHAR(5),				-- Day of Class MW, F, 
-	start			time,					-- Start time. Will need to perform arithmetics in a 
+	start			time default NULL,					-- Start time. Will need to perform arithmetics in a 
 	stop			time,					-- End time
 	building		VARCHAR(20),
 	room			VARCHAR(20),
