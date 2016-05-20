@@ -103,6 +103,7 @@
 //        {"trend_attr":"dept","trend_name":"Environment"}
 //        {trend_attr:"all",trend_name:"all"}
       ];
+      var inner_group = [];
       for(var id = 4; document.getElementById(String(id));) {
         var element = {};
         element["trend_attr"] = document.getElementById(String(id)).value;
@@ -115,8 +116,9 @@
         id = id + 1;
 //        data_group.push({"trend_attr":document.getElementById(String(id)).value,"trend_name":document.getElementById(String(id+1)).value});
 //      id = id + 2;
-        data_group.push(element);
+        inner_group.push(element);
       }
+      data_group.push(inner_group);
       //alert(document.getElementById("5").value)
       
 
@@ -127,7 +129,8 @@
             "yaxis_attr": y_axis,
             "yaxis_aggr": aggregate,
             "xaxis_attr": x_axis,
-            "data_group": JSON.stringify(data_group)
+            "data_group": JSON.stringify(data_group),
+            "nonezero_only": "true"
           },
           async: false
           }).responseText;
@@ -199,6 +202,7 @@
         <option value="quarter">Quarter</option>
         <option value="dept">Department</option>
         <option value="title">Title</option>
+        <option value="cnum">Course Number</option>
       </select>
       <!-- <br><br> -->
       <select id="3" name="Select Y-Axis Aggregate">
