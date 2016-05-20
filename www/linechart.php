@@ -78,11 +78,23 @@ function printCols(){
 	$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>'string');
 	$listo[] = $arr;
 
-	for ($i = 0; $i < count($result_arr); $i++) {
-        $element = $result_arr[$i];
+	// for ($i = 0; $i < count($result_arr); $i++) {
+ //        $element = $result_arr[$i];
 
-		$id = $data_trend[$i]->trend_attr . "_" . $i;
-		$label = $data_trend[$i]->trend_name;
+    foreach ($data_trend as $element) {
+
+        $label = "";
+		$i = count($element);
+		foreach($element as $cond){
+			$label = $label . "$cond->trend_name";
+			if($i != 1) 
+				$label = $label . ", ";
+			$i--;
+		}
+		$id = $label;
+
+		// $id = $data_trend[$i]->trend_attr . "_" . $i;
+		// $label = $data_trend[$i]->trend_name;
 		// $type = $typemapping[mysqli_fetch_field_direct($element, 1)->type];
 		$arr = array('id'=>$id,'label'=>$label,'pattern'=>'','type'=>'number');
 		$listo[] = $arr;
@@ -101,10 +113,13 @@ function printRows(){
 
 	// ensure that if different results have different number of rows, correct values will be matched
 	$last = array_fill(0,count($result_arr), 0);
+	$nonzero_only = $_GET['nonzero_only'];
+
 	while($x = mysqli_fetch_row($result_xaxis)){
 		
 		$list = array();
 		$list[] = array('v'=>$x[0], 'f'=>null);	// add xaxis information
+		$zero_count = 0;
 
 		for ($i=0; $i < count($result_arr); $i++) { 
 
@@ -117,6 +132,7 @@ function printRows(){
 				} else {						// if the xaxis dont match
 					$last[$i] = array($row[0], $row[1]);
 					$list[] = array('v'=>0, 'f'=>null);
+					$zero_count++;
 				}
 			} else {		// if there was an unused previously fetched value
 				
@@ -125,12 +141,19 @@ function printRows(){
 					$last[$i] = 0;
 				} else {						// if the xaxis dont match
 					$list[] = array('v'=>0, 'f'=>null);
+					$zero_count++;
 				}
 			}
+
 		}
-		$listo[] = array('c'=>$list);
+		if($nonzero_only == 'false' || $zero_count != count($result_arr)){
+			// the inverse of $nonzero_only == 'true' && $zero_count == count($result_arr)
+			// since the above is the only condition when a row is ignored, the negated version is then the only time a row is inserted
+
+			$listo[] = array('c'=>$list);
+		}
 	}
-	error_log(json_encode($listo));
+	// error_log(json_encode($listo));
 	echo json_encode($listo);
 
 }
@@ -181,7 +204,7 @@ $result_xaxis;
 
 $xaxis_format = ($xaxis_attr == 'start' || $xaxis_attr == 'stop')? "DATE_FORMAT($xaxis_attr, '%H:%i')":$xaxis_attr;
 
-$query_str = "SELECT $xaxis_attr
+$query_str = "SELECT $xaxis_format
 			  FROM Class
 			  GROUP BY $xaxis_attr
 			  ORDER BY $xaxis_attr";
@@ -189,19 +212,46 @@ $query_str = "SELECT $xaxis_attr
 $query_arr = array();
 foreach ($data_trend as $element) {
 
-	if($element->trend_attr == 'all'){
-		$query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
+	
+
+	/*
+	if($element[0]->trend_attr == 'all'){
+		$query_arr[] = "SELECT $xaxis_format, $yaxis_aggr($yaxis_attr)
 					  FROM Class
 					  GROUP BY $xaxis_attr
 					  ORDER BY $xaxis_attr";
 	} else {
-		$query_arr[] = "SELECT $xaxis_attr, $yaxis_aggr($yaxis_attr)
+		$condition = "";
+		$i = count($element);
+		foreach($element as $cond){
+			$condition = $condition . "$cond->trend_attr = '$cond->trend_name'";
+			if($i != 1) 
+				$condition = $condition . " AND ";
+			$i--;
+		}
+		$query_arr[] = "SELECT $xaxis_format, $yaxis_aggr($yaxis_attr)
 					  FROM Class
-					  WHERE $element->trend_attr = '$element->trend_name'
+					  WHERE $condition
 					  GROUP BY $xaxis_attr
 					  ORDER BY $xaxis_attr";
 	}
-
+	*/
+	$condition = "";
+	if($element[0]->trend_attr != 'all'){
+		$condition = "WHERE ";
+		$i = count($element);
+		foreach($element as $cond){
+			$condition = $condition . "$cond->trend_attr = '$cond->trend_name'";
+			if($i != 1) 
+				$condition = $condition . " AND ";
+			$i--;
+		}
+	}
+	$query_arr[] = "SELECT $xaxis_format, $yaxis_aggr($yaxis_attr)
+				  FROM Class
+				  $condition
+				  GROUP BY $xaxis_attr
+				  ORDER BY $xaxis_attr";
 }
 
 // Query the xaxis values and store the result variable

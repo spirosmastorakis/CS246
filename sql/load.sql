@@ -3,8 +3,10 @@
 LOAD DATA LOCAL INFILE '/media/sf_sandbox/CS246/classes.csv' INTO TABLE Class
 FIELDS TERMINATED BY ',' 
 OPTIONALLY ENCLOSED BY '"'
-(id, cid, quarter, year, dept, cnum, title, instructor, type, days, @vstart, stop, building, room, res, enrollment, enrollmentcap, waitlist, waitlistcap, status)
-SET start = NULLIF(@vstart,'')
+(id, cid, quarter, year, dept, cnum, title, instructor, type, days, @vstart, @vstop, building, room, res, enrollment, enrollmentcap, waitlist, waitlistcap, status)
+SET 
+	start = NULLIF(@vstart,''),
+	stop = NULLIF(@vstop,'')
 ;
 
 

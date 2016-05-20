@@ -1,7 +1,7 @@
 <?php
 $column = $_GET['column'];
 //please change database name, account and password.
-$conn = mysqli_connect("localhost", "root", "123456", "CS246");
+$conn = mysqli_connect("localhost", "root", "root", "TEST");
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);

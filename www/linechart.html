@@ -27,11 +27,25 @@
       // {"trend_attr":"dept","trend_name":"Computer Science"}
 
       var data_group = [
-        {trend_attr:"dept",trend_name:"Computer Science"},
-        {trend_attr:"dept",trend_name:"Electrical Engineering"}
+        [
+          {trend_attr:"dept",trend_name:"Computer Science"},
+          {trend_attr:"year",trend_name:"2014"},
+          {trend_attr:"quarter",trend_name:"Winter"},
+        ],
+        [
+          {trend_attr:"dept",trend_name:"Computer Science"},
+          {trend_attr:"year",trend_name:"2014"},
+          {trend_attr:"quarter",trend_name:"Spring"},
+        ],
+        [
+          {trend_attr:"dept",trend_name:"Computer Science"},
+          {trend_attr:"year",trend_name:"2014"},
+          {trend_attr:"quarter",trend_name:"Fall"},
+        ]
+        // {trend_attr:"dept",trend_name:"Electrical Engineering"}
         // {trend_attr:"quarter",trend_name:"Spring"}, 
         // {trend_attr:"dept",trend_name:"Environment"}
-        // {trend_attr:"all",trend_name:"all"}
+        // [{trend_attr:"all",trend_name:"all"}]
         ];
 
       var jsonData = $.ajax({
@@ -39,9 +53,10 @@
           url: "linechart.php",
           data:{
             "yaxis_attr":"enrollment",
-            "yaxis_aggr":"count",
-            "xaxis_attr":"start",
-            "data_group": JSON.stringify(data_group)
+            "yaxis_aggr":"sum",
+            "xaxis_attr":"cnum",
+            "data_group": JSON.stringify(data_group),
+            "nonzero_only":"true"
           },
           dataType: "json",
           type: "GET",
@@ -63,7 +78,7 @@
       var data = new google.visualization.DataTable(jsonData);
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
       chart.draw(data, {width: 1200, height: 600});
     }
 
