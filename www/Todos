@@ -1,6 +1,6 @@
 To dos:
 
-1. display course ID on the xaxis
-2. display days of the week on the xaxis
-3. distinct values for string values (e.g. instructor)
-4. support multi value 
+1. [x]display course ID on the xaxis
+2. []display days of the week on the xaxis
+3. []distinct values for string values (e.g. instructor)
+4. [x]support multi value 

@@ -28,20 +28,20 @@
 
       var data_group = [
         [
-          {trend_attr:"dept",trend_name:"Computer Science"},
-          {trend_attr:"year",trend_name:"2014"},
-          {trend_attr:"quarter",trend_name:"Winter"},
+          {trend_attr:"dept",trend_name:"Computer Science"}
+          // {trend_attr:"year",trend_name:"2014"},
+          // {trend_attr:"quarter",trend_name:"Winter"},
         ],
         [
-          {trend_attr:"dept",trend_name:"Computer Science"},
-          {trend_attr:"year",trend_name:"2014"},
-          {trend_attr:"quarter",trend_name:"Spring"},
-        ],
-        [
-          {trend_attr:"dept",trend_name:"Computer Science"},
-          {trend_attr:"year",trend_name:"2014"},
-          {trend_attr:"quarter",trend_name:"Fall"},
+          {trend_attr:"dept",trend_name:"Electrical Engineering"}
+          // {trend_attr:"year",trend_name:"2014"},
+          // {trend_attr:"quarter",trend_name:"Spring"},
         ]
+        // [
+        //   {trend_attr:"dept",trend_name:"Computer Science"},
+        //   {trend_attr:"year",trend_name:"2014"},
+        //   {trend_attr:"quarter",trend_name:"Fall"},
+        // ]
         // {trend_attr:"dept",trend_name:"Electrical Engineering"}
         // {trend_attr:"quarter",trend_name:"Spring"}, 
         // {trend_attr:"dept",trend_name:"Environment"}
@@ -52,9 +52,9 @@
           // url: "linechart.php?yaxis_attr=enrollment&yaxis_aggr=sum&xaxis_attr=year&data_group=ALL",
           url: "linechart.php",
           data:{
-            "yaxis_attr":"enrollment",
-            "yaxis_aggr":"sum",
-            "xaxis_attr":"cnum",
+            "yaxis_attr":"instructor",
+            "yaxis_aggr":"count",
+            "xaxis_attr":"year",
             "data_group": JSON.stringify(data_group),
             "nonzero_only":"true"
           },
@@ -78,7 +78,7 @@
       var data = new google.visualization.DataTable(jsonData);
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
       chart.draw(data, {width: 1200, height: 600});
     }
 
