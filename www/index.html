@@ -16,9 +16,9 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
 
-    var next_group_id = 4;
+    var total_attr_group = 1;
     var group_value_array = ["all", "dept", "year", "quarter"];
-    var group_text_array = ["all", "Department", "Year", "Quarter"];
+    var group_text_array = ["All", "Department", "Year", "Quarter"];
     // Load the Visualization API and the piechart package.
     google.charts.load('current', {'packages':['corechart']});
 
@@ -31,12 +31,13 @@
       return false;
     };
     
-    function addGroup() {
+    function addGroup(currentElement) {
       var submitform = document.getElementById("submitform");
       var selectList = document.createElement("select");
-      next_group_id += 2;
-      selectList.id = String(next_group_id);
-      submitform.appendChild(selectList);
+      currentElement.value = String(Number(currentElement.value) + 2);
+      selectList.id = currentElement.value;
+      //submitform.appendChild(selectList);
+      submitform.insertBefore(selectList, currentElement);
       //selectList.onchange = addSelect(next_group_id, selectList.value);
       for (var i = 0; i < group_value_array.length; i++) {
         var option = document.createElement("option");
@@ -44,10 +45,33 @@
         option.text = group_text_array[i];
         selectList.appendChild(option);
       }
-      var newline = document.createElement("br");
-      submitform.appendChild(newline);
-      //selectList.onchange = alert("test");
       selectList.setAttribute("onchange","addSelect(this.id, this.value)");
+    }
+   
+    function addAttrGroup(currentElement) {
+      var submitform = document.getElementById("submitform");
+      var selectList = document.createElement("select");
+      selectList.id = String(total_attr_group * 100 + 4);
+      total_attr_group++;
+      //submitform.appendChild(selectList);
+      submitform.insertBefore(selectList, currentElement);
+      //selectList.onchange = addSelect(next_group_id, selectList.value);
+      for (var i = 0; i < group_value_array.length; i++) {
+        var option = document.createElement("option");
+        option.value = group_value_array[i];
+        option.text = group_text_array[i];
+        selectList.appendChild(option);
+      }
+      selectList.setAttribute("onchange","addSelect(this.id, this.value)");
+      var button = document.createElement("button");
+      button.type = "button";
+      button.value = selectList.id;
+      button.setAttribute("onclick", "addGroup(this)");
+      button.innerHTML = "add a new group dimension";
+      submitform.insertBefore(button, currentElement);
+      
+      var newline = document.createElement("br");
+      submitform.insertBefore(newline, currentElement);
     }
 
     function addSelect(currentid, currentvalue) {
@@ -67,14 +91,12 @@
           }).responseText;
 
         //Create array of options to be added
-        //var array = ["Volvo","Saab","Mercades","Audi"];
         var array = eval(jsonData);
 
         //Create and append select list
         var selectList = document.createElement("select");
         selectList.id = String(id+1);
         //submitform.appendChild(selectList);
-        //submitform.children[id + 3].insertAdjacentElement("afterEnd", selectList);
         submitform.insertBefore(selectList, document.getElementById(String(id)).nextSibling);
         //Create and append the options
         for (var i = 0; i < array.length; i++) {
@@ -95,32 +117,30 @@
       var y_axis = document.getElementById("1").value;
       var x_axis = document.getElementById("2").value;
       var aggregate = document.getElementById("3").value;
-      //var data = document.getElementById("4").value;
-
+      var nonzero_only = document.getElementById("nonzero_only").checked ? "true" : "false";
+      //alert(nonzero_only);
       var data_group = [
 //        {"trend_attr":"dept","trend_name":"Computer Science"}, 
 //        {"trend_attr":"dept","trend_name":"Electrical Engineering"}, 
 //        {"trend_attr":"dept","trend_name":"Environment"}
 //        {trend_attr:"all",trend_name:"all"}
       ];
-      var inner_group = [];
-      for(var id = 4; document.getElementById(String(id));) {
-        var element = {};
-        element["trend_attr"] = document.getElementById(String(id)).value;
-        id = id + 1;
-        if(element["trend_attr"] === "all") 
-	  element["trend_name"] = "all";
-        else  {
-          element["trend_name"] = document.getElementById(String(id)).value;
+      for(var attr_group_num = 0; attr_group_num < total_attr_group; attr_group_num++) {
+        var inner_group = [];
+        for(var id = attr_group_num * 100 + 4; document.getElementById(String(id));) {
+          var element = {};
+          element["trend_attr"] = document.getElementById(String(id)).value;
+          id = id + 1;
+          if(element["trend_attr"] === "all") 
+	    element["trend_name"] = "all";
+          else  {
+            element["trend_name"] = document.getElementById(String(id)).value;
+          }
+          id = id + 1;
+          inner_group.push(element);
         }
-        id = id + 1;
-//        data_group.push({"trend_attr":document.getElementById(String(id)).value,"trend_name":document.getElementById(String(id+1)).value});
-//      id = id + 2;
-        inner_group.push(element);
+        data_group.push(inner_group);
       }
-      data_group.push(inner_group);
-      //alert(document.getElementById("5").value)
-      
 
       var jsonData = $.ajax({
           url: "linechart.php",
@@ -130,7 +150,7 @@
             "yaxis_aggr": aggregate,
             "xaxis_attr": x_axis,
             "data_group": JSON.stringify(data_group),
-            "nonzero_only": "true"
+            "nonzero_only": nonzero_only
           },
           async: false
           }).responseText;
@@ -180,7 +200,6 @@
 
   <body>
     <form id="submitform" onsubmit="return loadChart()">
-      <input type="submit">
       <br/>
       <select id="0" name="Select Chart Type">
         <option value="line">Line Chart</option>
@@ -196,7 +215,7 @@
         <option value="waitlist">Waitlist</option>
         <option value="waitlistcap">Waitlist Capacity</option>
       </select>
-      <!-- <br><br> -->
+      <input id="nonzero_only" type="checkbox">none zero vlaue</input>
       <select id="2" name="Select X-Axis Attributes">
         <option value="year">Year</option>
         <option value="quarter">Quarter</option>
@@ -204,7 +223,6 @@
         <option value="title">Title</option>
         <option value="cnum">Course Number</option>
       </select>
-      <!-- <br><br> -->
       <select id="3" name="Select Y-Axis Aggregate">
         <option value="sum">Sum</option>
         <option value="avg">Average</option>
@@ -219,11 +237,12 @@
         <option value="year">Year</option>
         <option value="quarter">Quarter</option>
       </select>
-      <br/>
-      
+      <button type="button", value="4", onclick="addGroup(this)">add a new group dimension</button>
+      <br/> 
+      <button type="button", onclick="addAttrGroup(this)">add a new group</button>
+      <input type="submit">
     </form>
     
-    <button type="button", onclick="addGroup()">add a new group dimension</button>
     <!--Div that will hold the pie chart-->
     <div id="chart_div"></div>
     <div id="div"></div>
