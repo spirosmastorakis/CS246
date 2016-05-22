@@ -50,6 +50,9 @@
    
     function addAttrGroup(currentElement) {
       var submitform = document.getElementById("submitform");
+      var header = document.createElement("h5");
+      header.innerHTML = "Select a Group of Data(attribute type and value pairs):";
+      submitform.insertBefore(header, currentElement);
       var selectList = document.createElement("select");
       selectList.id = String(total_attr_group * 100 + 4);
       total_attr_group++;
@@ -201,6 +204,7 @@
   <body>
     <form id="submitform" onsubmit="return loadChart()">
       <br/>
+      <h5>Select a Chart Type:</h5>
       <select id="0" name="Select Chart Type">
         <option value="line">Line Chart</option>
         <option value="bar">Bar Chart</option>
@@ -209,13 +213,15 @@
         <option value="histogram">Histogram</option>
         <option value="scatter">Scatter Chart</option>
       </select>
+      <h5>Select Y-Axis Attribute:</h5>
       <select id="1" name="Select Y-Axis Attributes">
         <option value="enrollment">Enrollment</option>
         <option value="enrollmentcap">Enrollment Capacity</option>
         <option value="waitlist">Waitlist</option>
         <option value="waitlistcap">Waitlist Capacity</option>
       </select>
-      <input id="nonzero_only" type="checkbox">none zero vlaue</input>
+      <input id="nonzero_only" type="checkbox">none zero vlaue only</input>
+      <h5>Select X-Axis Attribute:</h5>
       <select id="2" name="Select X-Axis Attributes">
         <option value="year">Year</option>
         <option value="quarter">Quarter</option>
@@ -223,6 +229,7 @@
         <option value="title">Title</option>
         <option value="cnum">Course Number</option>
       </select>
+      <h5>Select Analysis Function:</h5>
       <select id="3" name="Select Y-Axis Aggregate">
         <option value="sum">Sum</option>
         <option value="avg">Average</option>
@@ -231,6 +238,7 @@
         <option value="min">Minimum</option>
       </select>
       <br/>
+      <h5>Select a Group of Data (attribute type and value pairs):</h5>
       <select id="4" name="Select Data Group" onchange="addSelect(this.id, this.value)">
         <option value="all">All</option>
         <option value="dept">Department</option>
@@ -239,6 +247,7 @@
       </select>
       <button type="button", value="4", onclick="addGroup(this)">add a new group dimension</button>
       <br/> 
+      <!--<h5>Add a New Group or Submit:</h5>-->
       <button type="button", onclick="addAttrGroup(this)">add a new group</button>
       <input type="submit">
     </form>
