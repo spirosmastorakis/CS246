@@ -17,8 +17,8 @@
     <script type="text/javascript">
 
     var total_attr_group = 1;
-    var group_value_array = ["all", "dept", "year", "quarter"];
-    var group_text_array = ["All", "Department", "Year", "Quarter"];
+    var group_value_array = ["all", "cid", "quarter", "year", "dept", "cnum", "title", "instructor", "type", "sec", "days", "start", "stop", "building", "room", "res", "enrollment", "enrollmentcap", "waitlist", "waitlistcap", "status"];
+    var group_text_array = ["All", "Course ID", "Quarter", "Year", "Department", "Course Number", "Course Title", "Instructor", "Course Type", "Lecture Section Number", "Day of Class", "Start Time", "End Time", "Course Building", "Course Room", "Res", "Enrollment", "Enrollment Capacity", "Waitlist", "Waitlist Capacity", "Course Status"];
     // Load the Visualization API and the piechart package.
     google.charts.load('current', {'packages':['corechart']});
 
@@ -161,7 +161,7 @@
       // Print JSON object to HTML
       var jsonObj = JSON.parse(jsonData);
       var jsonStr = JSON.stringify(jsonObj, null, 2);
-      document.getElementById("code").innerHTML = jsonStr;
+      //document.getElementById("code").innerHTML = jsonStr;
 
       // Create our data table out of JSON data loaded from server.
       var data = new google.visualization.DataTable(jsonData);
@@ -169,27 +169,27 @@
       // Instantiate and draw our chart, passing in some options.
       if(charttype === "line") {
           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-          chart.draw(data, {width: 800, height: 480});
+          chart.draw(data, {width: 1200, height: 600});
       }
       else if(charttype === "bar") {
           var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-          chart.draw(data, {width: 800, height: 480});
+          chart.draw(data, {width: 1200, height: 600});
       }
       else if(charttype === "column") {
           var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-          chart.draw(data, {width: 800, height: 480});
+          chart.draw(data, {width: 1200, height: 600});
       }
       else if(charttype === "area") {
           var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-          chart.draw(data, {width: 800, height: 480});
+          chart.draw(data, {width: 1200, height: 600});
       }
       else if(charttype === "histogram") {
           var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
-          chart.draw(data, {width: 800, height: 480});
+          chart.draw(data, {width: 1200, height: 600});
       }
       else if(charttype === "scatter") {
           var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
-          chart.draw(data, {width: 800, height: 480});
+          chart.draw(data, {width: 1200, height: 600});
       }
     };
 
@@ -215,19 +215,50 @@
       </select>
       <h5>Select Y-Axis Attribute:</h5>
       <select id="1" name="Select Y-Axis Attributes">
+        <option value="cid">Course ID</option>
+        <option value="quarter">Quarter</option>
+        <option value="year">Year</option>
+        <option value="dept">Department</option>
+        <option value="cnum">Course Number</option>
+        <option value="title">Course Title</option>
+        <option value="instructor">Instructor</option>
+        <option value="type">Course Type</option>
+        <option value="sec">Lecture Section Number</option>
+        <option value="days">Day of Class</option>
+        <option value="start">Start Time</option>
+        <option value="stop">End Time</option>
+        <option value="building">Course Building</option>
+        <option value="room">Course Room</option>
+        <option value="res">Res</option>
         <option value="enrollment">Enrollment</option>
         <option value="enrollmentcap">Enrollment Capacity</option>
         <option value="waitlist">Waitlist</option>
         <option value="waitlistcap">Waitlist Capacity</option>
+        <option value="status">Course Status</option>
       </select>
-      <input id="nonzero_only" type="checkbox">none zero vlaue only</input>
+      <input id="nonzero_only" type="checkbox">none zero value only</input>
       <h5>Select X-Axis Attribute:</h5>
       <select id="2" name="Select X-Axis Attributes">
-        <option value="year">Year</option>
+        <option value="cid">Course ID</option>
         <option value="quarter">Quarter</option>
+        <option value="year">Year</option>
         <option value="dept">Department</option>
-        <option value="title">Title</option>
         <option value="cnum">Course Number</option>
+        <option value="title">Course Title</option>
+        <option value="instructor">Instructor</option>
+        <option value="type">Course Type</option>
+        <option value="sec">Lecture Section Number</option>
+        <option value="days">Day of Class</option>
+        <option value="start">Start Time</option>
+        <option value="stop">End Time</option>
+        <option value="building">Course Building</option>
+        <option value="room">Course Room</option>
+        <option value="res">Res</option>
+        <option value="enrollment">Enrollment</option>
+        <option value="enrollmentcap">Enrollment Capacity</option>
+        <option value="waitlist">Waitlist</option>
+        <option value="waitlistcap">Waitlist Capacity</option>
+        <option value="status">Course Status</option>
       </select>
       <h5>Select Analysis Function:</h5>
       <select id="3" name="Select Y-Axis Aggregate">
@@ -241,9 +272,26 @@
       <h5>Select a Group of Data (attribute type and value pairs):</h5>
       <select id="4" name="Select Data Group" onchange="addSelect(this.id, this.value)">
         <option value="all">All</option>
-        <option value="dept">Department</option>
-        <option value="year">Year</option>
+        <option value="cid">Course ID</option>
         <option value="quarter">Quarter</option>
+        <option value="year">Year</option>
+        <option value="dept">Department</option>
+        <option value="cnum">Course Number</option>
+        <option value="title">Course Title</option>
+        <option value="instructor">Instructor</option>
+        <option value="type">Course Type</option>
+        <option value="sec">Lecture Section Number</option>
+        <option value="days">Day of Class</option>
+        <option value="start">Start Time</option>
+        <option value="stop">End Time</option>
+        <option value="building">Course Building</option>
+        <option value="room">Course Room</option>
+        <option value="res">Res</option>
+        <option value="enrollment">Enrollment</option>
+        <option value="enrollmentcap">Enrollment Capacity</option>
+        <option value="waitlist">Waitlist</option>
+        <option value="waitlistcap">Waitlist Capacity</option>
+        <option value="status">Course Status</option>
       </select>
       <button type="button", value="4", onclick="addGroup(this)">add a new group dimension</button>
       <br/> 
