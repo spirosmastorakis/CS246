@@ -27,25 +27,41 @@
       // {"trend_attr":"dept","trend_name":"Computer Science"}
 
       var data_group = [
-        [
-          {trend_attr:"dept",trend_name:"Computer Science"}
-          // {trend_attr:"year",trend_name:"2014"},
-          // {trend_attr:"quarter",trend_name:"Winter"},
-        ],
-        [
-          {trend_attr:"dept",trend_name:"Electrical Engineering"}
-          // {trend_attr:"year",trend_name:"2014"},
-          // {trend_attr:"quarter",trend_name:"Spring"},
-        ]
         // [
         //   {trend_attr:"dept",trend_name:"Computer Science"},
-        //   {trend_attr:"year",trend_name:"2014"},
-        //   {trend_attr:"quarter",trend_name:"Fall"},
+        //   {trend_attr:"cnum",trend_name:"143"},
+        //   {trend_attr:"instructor",trend_name:"CHO,J."}
+        // ],
+        // [
+        //   {trend_attr:"dept",trend_name:"Computer Science"},
+        //   {trend_attr:"cnum",trend_name:"144"},
+        //   {trend_attr:"instructor",trend_name:"CHO,J."}
+        // ],
+        // [
+        //   {trend_attr:"dept",trend_name:"Computer Science"},
+        //   {trend_attr:"cnum",trend_name:"246"},
+        //   {trend_attr:"instructor",trend_name:"CHO,J."}
+        // ]
+        
+        // [
+        //   {trend_attr:"dept",trend_name:"Computer Science"}
+        //   // {trend_attr:"year",trend_name:"2014"},
+        //   // {trend_attr:"quarter",trend_name:"Fall"}
+        // ],
+        // [
+        //   {trend_attr:"dept",trend_name:"Electrical Engineering"},
+        //   // {trend_attr:"year",trend_name:"2014"},
+        //   // {trend_attr:"quarter",trend_name:"Fall"},
+        // ],
+        // [
+        //   {trend_attr:"dept",trend_name:"Chemical Engineering"},
+        //   // {trend_attr:"year",trend_name:"2014"},
+        //   // {trend_attr:"quarter",trend_name:"Fall"},
         // ]
         // {trend_attr:"dept",trend_name:"Electrical Engineering"}
         // {trend_attr:"quarter",trend_name:"Spring"}, 
         // {trend_attr:"dept",trend_name:"Environment"}
-        // [{trend_attr:"all",trend_name:"all"}]
+        [{trend_attr:"all",trend_name:"all"}]
         ];
 
       var jsonData = $.ajax({
@@ -83,7 +99,7 @@
       var data = new google.visualization.DataTable(jsonData);
 
       // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
       chart.draw(data, {width: 1200, height: 600});
     }
 
